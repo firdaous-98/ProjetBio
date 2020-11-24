@@ -22,8 +22,12 @@ from AppBio import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index_view),
-    path('register/', views.register_view),
-    path('login/', views.login_view),
-    path('home/', views.home_view),
-    path('home/logout/', views.logout_view)
+    path('login/', views.login_view, name='login'),
+    path('register/', views.register_view, name='register'),
+    path('home/', views.home_view, name='home'),
+    path('home/logout/', views.logout_view),
+    path('home/upload/', views.upload_data),
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
+    path('register/acc_active_email.html', views.acc_activate),
+    path('temp/', views.script_exec),
 ]

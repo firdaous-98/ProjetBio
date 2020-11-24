@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Home page</title>
+  <title>Upload page</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -15,23 +15,21 @@
     <div class="navbar-header">
       <a class="navbar-brand" href="#">WebSiteName</a>
     </div>
-    <ul class="nav navbar-nav">
-        <li><a href="logout"><span class="glyphicon glyphicon-edit"></span> My studies</a></li>
-        <li><a href="logout"><span class="glyphicon glyphicon-stats"></span> My results</a></li>
-    </ul>
- <ul class="nav navbar-nav navbar-right">
+    <ul class="nav navbar-nav navbar-right">
         <li><a href="logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
     </ul>
   </div>
 </nav>
   
-<div class="container text-center">
-  <h3>Welcome</h3>
-  <p>This application allows you to perform the <b>Analysis of the amplicon sequencing data</b></p>
-  <p> By clicking on start, you begin the analysis by first uploading your fastq files along with the mapping file</p>
-<div class="col-lg-4 col-lg-offset-4" >
-<a href="upload"><button type="reset" class="btn btn-success btn-lg">Start</button></a>
-</div>
+<div class="container">
+  {% load crispy_forms_tags %}
+  {% block content %}
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form|crispy}}
+    <input type="submit" class="btn btn-success" value="Submit"></button>
+    </form>
+    {% endblock content %}
 </div>
 
 </body>

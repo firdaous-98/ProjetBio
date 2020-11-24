@@ -1,28 +1,16 @@
 from django import forms
-from django.contrib.auth import (
-    authenticate,
-    get_user_model
-)
+from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth.forms import UserCreationForm
+from .models import Analysis
+from django.forms import ClearableFileInput
+from django.contrib.auth.models import User
 
 User = get_user_model()
 
-
-class UserRegisterForm(forms.ModelForm):
-    email = forms.EmailField(label='Email Address')
-    password = forms.CharField(widget=forms.PasswordInput)
-    password2 = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
-
+class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password2']
-
-    def clean(self, *args, **kwargs):
-        password = self.cleaned_data.get('password')
-        password2 = self.cleaned_data.get('password2')
-        if password != password2:
-            raise forms.ValidationError('Passwords must match')
-        return super(UserRegisterForm, self).clean(*args, **kwargs)
-
+        fields = ['username', 'email' , 'password1' ,'password2']
 
 class UserLoginForm(forms.Form):
     username = forms.CharField()
@@ -40,4 +28,19 @@ class UserLoginForm(forms.Form):
                 raise forms.ValidationError('Incorrect password')
             if not user.is_active:
                 raise forms.ValidationError('The user is not active')
-        return super(UserLoginForm, self).clean(*args, **kwargs)
+        return super(UserLoginForm,self).clean(*args,**kwargs)
+
+class ResumeUpload(forms.ModelForm):
+
+    mapping_file = forms.FileField(label='Mapping File')
+    sample_size = forms.IntegerField(label = 'Normalization value:Number of reads per samples (default: 50000)')
+    min_otu_freq = forms.FloatField(label='Minimum size for an OTU as fraction of all OTUs (default: 0.001)')
+    p_perc_identity = forms.FloatField(label='Percent identity for OTUs classifier (default: 0.97)',max_value=0.97, min_value=0.93)
+
+
+    class Meta:
+        model = Analysis
+        fields = ['fastq_files', 'mapping_file', 'sample_size', 'min_otu_freq', 'p_perc_identity']
+        widgets = {
+            'fastq_files': ClearableFileInput(attrs={'multiple': True}),
+        }
